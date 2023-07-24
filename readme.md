@@ -2,7 +2,7 @@
 
 # Proposed Quantum Theory of the Mind: Neural Network Integration
 
-An overview of the integration of a custom-built three-dimensional
+An overview of the integration of a custom-built high-dimensional
 neural mesh into the proposed Quantum Theory of the Mind
 
 **Abstract**
