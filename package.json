@@ -1,0 +1,25 @@
+{
+  "name": "qnn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "QNN.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "LiveBacteria (Tyler Poore)",
+  "license": "ISC",
+  "dependencies": {
+    "@pinecone-database/pinecone": "^0.1.6",
+    "canvas": "^2.11.2",
+    "cuda": "^0.1.0",
+    "geokdbush": "^1.1.0",
+    "gl": "^6.0.2",
+    "gpu.js": "^2.16.0",
+    "kdbush": "^4.0.2",
+    "mathjs": "^11.8.0",
+    "progress": "^2.0.3",
+    "prompt": "^1.3.0",
+    "prompt-sync": "^4.2.0",
+    "static-kdtree": "^1.0.2"
+  }
+}
