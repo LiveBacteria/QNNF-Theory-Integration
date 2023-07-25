@@ -25,7 +25,7 @@ const ps = 0.988;
 const gs = 512;
 const nc = 1000000;
 // const d = 3500;
-const d = 3;
+const d = 12;
 const density = 7000;
 
 let meaningOfLife = 42;
@@ -83,6 +83,7 @@ function createSuperpositionFromState() {
   // create superpositions for each point in the space
   const { avgPoint } = currState.reduce(
     (acc, cur, _, arr) => {
+      if (cur.neuron === undefined) debugger;
       for (let i = 0; i < cur.neuron.length; i++) {
         acc.avgPoint[i] += cur.neuron[i] / arr.length;
       }
@@ -416,14 +417,19 @@ async function runningLoop(client) {
   // Loop the nextPotentialState map and move them to the currentState
   for (let neuron of nextPotentialState.keys()) {
     // If the neuron's potential is greater than the threshold
-    if (nextPotentialState.get(neuron).value > 0.3) {
+    const tempVar = nextPotentialState.get(neuron).value * 98888;
+    if (tempVar > 0.3) {
       // Add the neuron to the currState
+      // console.log(`Neuron Fired: ${neuron}`);
       currState.push({
-        point: neuron,
+        neuron: neuron,
         value: nextPotentialState.get(neuron).value,
       });
     }
   }
+
+  // Clear the nextPotentialState map
+  nextPotentialState.clear();
 
   // run the system
   // update the environment
