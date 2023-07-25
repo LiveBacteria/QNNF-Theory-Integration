@@ -11,7 +11,7 @@ const pineconeAPIKey = process.env.PINECONE_API_KEY;
 // Initialize the client
 const client = new PineconeClient();
 
-const D = 3500;
+// const D = 3500;
 // const points = Array.from({ length: 50 }, () => {
 //   const coords = Array.from({ length: D }, () => Math.random());
 //   return {
@@ -24,7 +24,8 @@ const D = 3500;
 const ps = 0.988;
 const gs = 512;
 const nc = 1000000;
-const d = 3500;
+// const d = 3500;
+const d = 3;
 const density = 7000;
 
 let meaningOfLife = 42;
@@ -136,13 +137,14 @@ function createWeight(values) {
 async function enactQuantumMotion(qs, vector) {
   // topK to return
   const topK = 10;
+  const newID = generateUUID();
 
   // Array of all superpositions to update, including given superposition
   const superpositionsToUpdate = [
     {
-      id: () => generateUUID(),
+      id: newID,
       values: vector,
-      metadata: { weight: 0 },
+      metadata: { weight: 1 },
     },
   ];
 
@@ -253,11 +255,17 @@ async function enactQuantumMotion(qs, vector) {
     }
 
     // Update Neighboring Superpositions towards the current superposition by rank
+    // Update superposition
+    await qs.upsert({
+      upsertRequest: {
+        vectors: superpositionsToUpdate,
+      },
+    });
 
     return psironWeight;
   } else {
     // Update superposition
-    await superpositions.upsert({
+    await qs.upsert({
       upsertRequest: {
         vectors: superpositionsToUpdate,
       },
@@ -294,18 +302,15 @@ function updateCurrState() {
 
 // Generate UUID for Superposition in hypervector database
 const generateUUID = () => {
-  let uuid = function () {
-    return Array.from(Array(16))
-      .map((e) =>
-        Math.floor(Math.random() * 255)
-          .toString(16)
-          .padStart(2, "0")
-      )
-      .join("")
-      .match(/.{1,4}/g)
-      .join("-");
-  };
-  return uuid;
+  return Array.from(Array(16))
+    .map((e) =>
+      Math.floor(Math.random() * 255)
+        .toString(16)
+        .padStart(2, "0")
+    )
+    .join("")
+    .match(/.{1,4}/g)
+    .join("-");
 };
 
 // This is just a check function that moves neurons that pass the threshold of 0.3 into the currState
@@ -370,7 +375,7 @@ async function runningLoop(client) {
 
   for (let neuron of currState) {
     // Get adjacent points
-    const adjacentPoints = getAdjacentPoints(neuron.point);
+    const adjacentPoints = getAdjacentPoints(neuron.neuron);
 
     // Loop through adjacent points
     for (let point of adjacentPoints) {
@@ -405,8 +410,8 @@ async function runningLoop(client) {
   // propagate the input signal to the neurons
   // await propagateInputSignal();
 
-  // Clear the currState
-  currState = [];
+  // Clear the currState array
+  currState.length = 0;
 
   // Loop the nextPotentialState map and move them to the currentState
   for (let neuron of nextPotentialState.keys()) {
